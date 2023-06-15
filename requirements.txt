@@ -1,0 +1,5 @@
+# For linux, conda install --channel conda-forge pyvips
+# It takes some time to install pyvips
+tqdm
+natsort
+openslide-python
