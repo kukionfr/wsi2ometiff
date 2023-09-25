@@ -56,7 +56,7 @@ def ims2ometiff(ims,outputfilepath):
     print('saving image...')
     # jp2k breaks the format somehow
     start=time()
-    comp.tiffsave(outputfilepath, compression="None", tile=True,
+    comp.tiffsave(outputfilepath, compression="packbits", tile=True,
                   tile_width=512, tile_height=512,
                   pyramid=True, subifd=True)
     print('elapsed time: {}'.format(round(time()-start)))
@@ -66,7 +66,7 @@ if __name__=='__main__':
 
 
     # Define input image paths
-    input_dir = '/Volumes/Digital pathology image lib/JHU/Laura Wood/IF for SenPan001/sec125/align_wsi'
+    input_dir = '/Volumes/Digital pathology image lib-1/MxIF SFC/TMA_P1/align_wsi/ReadDsf1_OutDsf5'
 
 
     ims = glob.glob(os.path.join(input_dir,'*.tif'))
@@ -77,4 +77,4 @@ if __name__=='__main__':
     output_dir = os.path.join(input_dir, 'cstack')
     if not os.path.exists(output_dir): os.mkdir(output_dir)
     # Execute the function
-    ims2ometiff(ims,os.path.join(output_dir,'cstack.ome.tiff'))
+    ims2ometiff(ims,os.path.join(output_dir,'packbits_cstack.ome.tiff'))
