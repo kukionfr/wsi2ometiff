@@ -12,8 +12,8 @@ def ims2ometiff(ims,output_dir,q,compression):
         # imobj = pyvips.Image.openslideload(impth,level=0)
         if imobj.hasalpha(): imobj = imobj[:-1]
         imobjs.append(pyvips.Image.arrayjoin(imobj.bandsplit(), across=1))
-    zlen = len(imobjs)
-    print('Z stack height:', zlen)
+    c = len(imobjs)
+    print('N channels :',c)
 
     if imobj.interpretation == 'b-w':
         bitdepth = 8
@@ -40,11 +40,11 @@ def ims2ometiff(ims,output_dir,q,compression):
             <!-- Minimum required fields about image dimensions -->
             <Pixels DimensionOrder="XYCZT"
                     ID="Pixels:0"
-                    SizeC="3"
+                    SizeC="{len(imobjs)}"
                     SizeT="1"
                     SizeX="{image_width}"
                     SizeY="{image_height}"
-                    SizeZ="{len(imobjs)}"
+                    SizeZ="1"
                     Type="uint{bitdepth}">
             </Pixels>
         </Image>
@@ -64,14 +64,13 @@ def ims2ometiff(ims,output_dir,q,compression):
     print('ome-tiff saved here: ',outputfilepath)
 
 if __name__=='__main__':
-    input_dir = '/Volumes/Digital pathology image lib-1/HubMap Skin TMC project/HM-SR1-Skin-P004-B1-SB02/HESS/AlignIM/run1/Dalign__imdsf16__dsfout1_padsz500'
-    output_dir = os.path.join(input_dir, 'zstack')
+    input_dir = '/Volumes/Digital pathology image lib/MxIF SFC/TMA_S1/align_wsi/ReadDsf1_OutDsf1_2'
+    output_dir = os.path.join(input_dir, 'cstack')
     if not os.path.exists(output_dir): os.mkdir(output_dir)
-    ims = glob.glob(os.path.join(input_dir, '*.jpg')) + glob.glob(os.path.join(input_dir, '*.png')) + glob.glob(
-        os.path.join(input_dir, '*.tif')) + glob.glob(os.path.join(input_dir, '*.tiff'))
+    ims = glob.glob(os.path.join(input_dir,'*.jpg')) + glob.glob(os.path.join(input_dir,'*.png')) + glob.glob(os.path.join(input_dir,'*.tif')) + glob.glob(os.path.join(input_dir,'*.tiff'))
     ims = natsorted(ims)
     # ims = ims[0:2]
-    c = len(ims)
-    q = 30
-    compression = 'none'  # jpeg only support 8bit, so try none for 16bit
-    ims2ometiff(ims, output_dir, q, compression)
+    c=len(ims)
+    q=30
+    compression='none' #jpeg only support 8bit, so try none for 16bit
+    ims2ometiff(ims,output_dir,q,compression)
