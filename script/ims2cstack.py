@@ -1,5 +1,7 @@
-import pyvips  #must use conda to install
 import os
+vipshome = r'C:\Users\kyu\Documents\vips-dev-8.15\bin'
+os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
+import pyvips  #must use conda to install
 import glob
 from natsort import natsorted
 from time import time
@@ -20,7 +22,7 @@ def ims2ometiff(ims,output_dir,q,compression):
     elif imobj.interpretation == 'grey16':
         bitdepth = 16
 
-    outputfilepath = os.path.join(output_dir, 'C{}_Q{}_B{}_{}.ome.tiff'.format(c, q, bitdepth, compression))
+    outputfilepath = os.path.join(output_dir, 'C{}_Q{}_B{}_{}_win10.ome.tiff'.format(c, q, bitdepth, compression))
 
     comp = pyvips.Image.arrayjoin(imobjs, across=1)
     image_height = imobj.height
@@ -64,7 +66,8 @@ def ims2ometiff(ims,output_dir,q,compression):
     print('ome-tiff saved here: ',outputfilepath)
 
 if __name__=='__main__':
-    input_dir = '/Volumes/Digital pathology image lib/MxIF SFC/TMA_S1/align_wsi/ReadDsf1_OutDsf1_2'
+    # input_dir = '/Volumes/Digital pathology image lib/MxIF SFC/TMA_S1/align_wsi/ReadDsf1_OutDsf1_2'
+    input_dir = r'\\10.99.68.54\Digital pathology image lib\SenNet JHU TDA Project\SN-LW-PA-P003-B1_SNP004\MxIF\Sec029\align_wsi\ReadDsf1_OutDsf1_2'
     output_dir = os.path.join(input_dir, 'cstack')
     if not os.path.exists(output_dir): os.mkdir(output_dir)
     ims = glob.glob(os.path.join(input_dir,'*.jpg')) + glob.glob(os.path.join(input_dir,'*.png')) + glob.glob(os.path.join(input_dir,'*.tif')) + glob.glob(os.path.join(input_dir,'*.tiff'))
@@ -72,5 +75,5 @@ if __name__=='__main__':
     # ims = ims[0:2]
     c=len(ims)
     q=30
-    compression='none' #jpeg only support 8bit, so try none for 16bit
+    compression='jpeg' #jpeg only support 8bit, so try none for 16bit
     ims2ometiff(ims,output_dir,q,compression)
